@@ -384,7 +384,11 @@ impl Build {
             let mut cc = cc::Build::new();
             cc.target(target).host(host).warnings(false).opt_level(2);
             let compiler = cc.get_compiler();
-            configure.env("CC", compiler.path());
+            if target.contains("android") && host.contains("windows") {
+                configure.env("CC", compiler.path().file_name().unwrap());
+            } else {
+                configure.env("CC", compiler.path());
+            }
             let path = compiler.path().to_str().unwrap();
 
             // Both `cc::Build` and `./Configure` take into account
