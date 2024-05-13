@@ -251,6 +251,11 @@ impl Build {
             configure.arg("no-stdio");
         }
 
+        // Fix atomic linkage for i686-linux-android https://github.com/sfackler/rust-openssl/issues/2163
+        if target == "i686-linux-android" {
+            configure.arg("-DBROKEN_CLANG_ATOMICS");
+        }
+
         if target.contains("msvc") {
             // On MSVC we need nasm.exe to compile the assembly files.
             // ASM compiling will be enabled if nasm.exe is installed, unless
